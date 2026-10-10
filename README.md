@@ -5,7 +5,7 @@ Ghostty Terminal for debian
 
 The source : `https://github.com/ghostty-org/ghostty` 
 
-We are currently building against the tag `v1.0.1` 
+We are currently building against the tag `v1.3.1` 
 
 ## Download
 
@@ -13,12 +13,12 @@ We are currently building against the tag `v1.0.1`
 
 #### Ubuntu
 
-https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-ubuntu-24.04-amd64.tar.bz2
+https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-ubuntu-26.04-amd64.tar.bz2
 
 #### Debian
 
-https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-debian-12-amd64.tar.bz2
+https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-debian-13-amd64.tar.bz2
 
 ## Warning
 
-Currently this build is only supporting Ubuntu Linux 24.04 and Debian GNU/Linux 12
+Currently this build is only supporting Ubuntu Linux 26.04 and Debian GNU/Linux 13
