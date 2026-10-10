@@ -79,7 +79,8 @@ jobs:
             libgtk4-layer-shell-dev \
             libadwaita-1-dev \
             libxml2-utils \
-            blueprint-compiler
+            blueprint-compiler \
+            git
 
       # Refer : https://github.com/marketplace/actions/setup-zig-compiler
       - name: "Setup Zip"
