@@ -52,7 +52,8 @@ jobs:
         run: |
           cd ghostty
           export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu.2.35 -Dcpu=baseline
+          export ZIG_SYSTEM_LINKER_HACK=1
+          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline --system /
           mv zig-out ghostty
           tar -jcf ghostty-ubuntu-26.04-amd64.tar.bz2 ghostty
 
@@ -115,7 +116,8 @@ jobs:
         run: |
           cd ghostty
           export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu.2.35 -Dcpu=baseline
+          export ZIG_SYSTEM_LINKER_HACK=1
+          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline --system /
           mv zig-out ghostty
           tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
 
