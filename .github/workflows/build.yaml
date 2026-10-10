@@ -21,6 +21,7 @@ jobs:
           sudo apt-get update
           #sudo apt-get install -y libgtk-4-dev libadwaita-1-dev gettext
           sudo apt-get install -y \
+            bzip2 \
             gettext \
             libgtk-4-dev \
             libgtk4-layer-shell-dev \
@@ -43,7 +44,8 @@ jobs:
           repository: 'ghostty'
           
       - name: "Build Ghostty binary"
-        run: cd ghostty && zig build -Doptimize=ReleaseFast && mv zig-out ghostty && tar -jcf ghostty-ubuntu-26.04-amd64.tar.bz2 ghostty
+        # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
+        run: cd ghostty && zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu && mv zig-out ghostty && tar -jcf ghostty-ubuntu-26.04-amd64.tar.bz2 ghostty
 
       - name: "List files"
         run: ls -liFh
@@ -98,7 +100,8 @@ jobs:
           repository: 'ghostty'
 
       - name: "Build Ghostty binary"
-        run: cd ghostty && zig build -Doptimize=ReleaseFast && mv zig-out ghostty && tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
+        # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
+        run: cd ghostty && zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu && mv zig-out ghostty && tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
 
       - name: "List files"
         run: ls -liFh
