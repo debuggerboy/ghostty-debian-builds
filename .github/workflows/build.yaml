@@ -23,9 +23,9 @@ jobs:
 
       # Refer : https://github.com/marketplace/actions/setup-zig-compiler
       - name: "Setup Zip"
-        uses: mlugg/setup-zig@v1
+        uses: debuggerboy/setup-zig@v1
         with:
-          version: 0.15.0
+          version: 0.17.0
 
       - name: "Clone Ghostty repo"
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
@@ -68,9 +68,9 @@ jobs:
 
       # Refer : https://github.com/marketplace/actions/setup-zig-compiler
       - name: "Setup Zip"
-        uses: mlugg/setup-zig@v1
+        uses: debuggerboy/setup-zig@v1
         with:
-          version: 0.15.0
+          version: 0.17.0
 
       - name: "Clone Ghostty repo"
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
