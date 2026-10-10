@@ -1,5 +1,6 @@
 # ghostty-debian-builds
-Ghostty Terminal for debian
+
+Ghostty Terminal for Ubuntu and Debian
 
 ## Source
 
