@@ -25,7 +25,7 @@ jobs:
       - name: "Setup Zip"
         uses: mlugg/setup-zig@v1
         with:
-          version: 0.13.0
+          version: 0.15.0
 
       - name: "Clone Ghostty repo"
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
@@ -70,7 +70,7 @@ jobs:
       - name: "Setup Zip"
         uses: mlugg/setup-zig@v1
         with:
-          version: 0.13.0
+          version: 0.15.0
 
       - name: "Clone Ghostty repo"
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
