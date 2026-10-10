@@ -19,7 +19,14 @@ jobs:
       - name: "Install Depenencies"
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-4-dev libadwaita-1-dev gettext
+          #sudo apt-get install -y libgtk-4-dev libadwaita-1-dev gettext
+          sudo apt-get install -y \
+            gettext \
+            libgtk-4-dev \
+            libgtk4-layer-shell-dev \
+            libadwaita-1-dev \
+            libxml2-utils \
+            blueprint-compiler
 
       # Refer : https://github.com/marketplace/actions/setup-zig-compiler
       - name: "Setup Zip"
@@ -64,7 +71,14 @@ jobs:
       - name: "Install Depenencies"
         run: |
           apt-get update
-          apt-get install -y build-essential git libgtk-4-dev libadwaita-1-dev gettext
+          #apt-get install -y build-essential git libgtk-4-dev libadwaita-1-dev gettext
+          apt-get install -y \
+            gettext \
+            libgtk-4-dev \
+            libgtk4-layer-shell-dev \
+            libadwaita-1-dev \
+            libxml2-utils \
+            blueprint-compiler
 
       # Refer : https://github.com/marketplace/actions/setup-zig-compiler
       - name: "Setup Zip"
