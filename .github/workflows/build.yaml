@@ -1,132 +1,56 @@
-name: "Build Ghostty"
+name: Build Ghostty Packages
 
 on:
   push:
     branches:
-    - main
+      - main
+  workflow_dispatch:
+
+# Top-level environment variables parameterising shared build properties.
+# Note: 'env' context is supported inside steps, but NOT inside 'container.image'.
+# Distribution images are parameterised via the matrix below.
+env:
+  GHOSTTY_REPO: "ghostty-org/ghostty"
+  GHOSTTY_VERSION: "v1.3.1"
+  ARCH: "amd64"
+  RELEASE_TAG: "main"
 
 jobs:
   build:
-    name: "Build Ghostty for Ubuntu 26.04 LTS"
-    runs-on: ubuntu-26.04
-    permissions: write-all
-
+    name: Build ${{ matrix.distro }} Package
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: ubuntu
+            version: "26.04"
+          - distro: debian
+            version: "13"
+    container:
+      image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
-      - name: "Checkout latest codebase"
-        uses: actions/checkout@v7
-
-      # Refer : https://ghostty.org/docs/install/build
-      - name: "Install Depenencies"
-        run: |
-          sudo apt-get update
-          #sudo apt-get install -y libgtk-4-dev libadwaita-1-dev gettext
-          sudo apt-get install -y \
-            xz-utils \
-            bzip2 \
-            gettext \
-            libgtk-4-dev \
-            libgtk4-layer-shell-dev \
-            libadwaita-1-dev \
-            libxml2-utils \
-            blueprint-compiler \
-            libx11-dev \
-            git
-
-      # Refer : https://github.com/marketplace/actions/setup-zig-compiler
-      - name: "Setup Zip"
-        uses: debuggerboy/setup-zig@v1
+      - name: Checkout Ghostty Repository
+        uses: actions/checkout@v4
         with:
-          version: 0.15.2
+          repository: ${{ env.GHOSTTY_REPO }}
+          ref: ${{ env.GHOSTTY_VERSION }}
+          path: ghostty
 
-      - name: "Clone Ghostty repo"
-        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
-        with:
-          depth: 1
-          branch: 'v1.3.1'
-          owner: 'ghostty-org'
-          repository: 'ghostty'
-          
-      - name: "Build Ghostty binary"
-        # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
-        #run: cd ghostty && zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu && mv zig-out ghostty && tar -jcf ghostty-ubuntu-26.04-amd64.tar.bz2 ghostty
-        run: |
-          cd ghostty
-          export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          zig build --fetch
-          zig build -Doptimize=ReleaseFast -Dcpu=baseline
-          mv zig-out ghostty
-          tar -jcf ghostty-ubuntu-26.04-amd64.tar.bz2 ghostty
-
-      - name: "List files"
-        run: ls -liFh
-
-      - name: "Create a release"
-        uses: softprops/action-gh-release@v3
-        with:
-          name: ${{ github.run.id }}
-          tag_name: ${{ github.ref_name }}
-          files: ghostty/ghostty-ubuntu-26.04-amd64.tar.bz2
-
-
-  debian:
-    name: "Build Ghostty for Debian 13 Trixie"
-    runs-on: ubuntu-24.04
-    permissions: write-all
-    # Refer : https://stackoverflow.com/questions/64033686/how-can-i-use-private-docker-image-in-github-actions
-    container: debian:13.7
-    
-    steps:
-      - name: "Checkout latest codebase"
-        uses: actions/checkout@v7
-
-      # Refer : https://ghostty.org/docs/install/build
-      - name: "Install Depenencies"
+      - name: Install Dependencies
         run: |
           apt-get update
-          #apt-get install -y build-essential git libgtk-4-dev libadwaita-1-dev gettext
-          apt-get install -y \
-            xz-utils \
-            bzip2 \
-            gettext \
-            libgtk-4-dev \
-            libgtk4-layer-shell-dev \
-            libadwaita-1-dev \
-            libxml2-utils \
-            blueprint-compiler \
-            libx11-dev \
-            git
+          apt-get install -y build-essential xz-utils gettext libgtk-4-dev libgtk4-layer-shell-dev libadwaita-1-dev libxml2-utils blueprint-compiler libx11-dev git bzip2
 
-      # Refer : https://github.com/marketplace/actions/setup-zig-compiler
-      - name: "Setup Zip"
-        uses: debuggerboy/setup-zig@v1
-        with:
-          version: 0.15.2
-
-      - name: "Clone Ghostty repo"
-        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
-        with:
-          depth: 1
-          branch: 'v1.3.1'
-          owner: 'ghostty-org'
-          repository: 'ghostty'
-
-      - name: "Build Ghostty binary"
-        # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
-        #run: cd ghostty && zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu && mv zig-out ghostty && tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
+      - name: Package Binary Artifacts
         run: |
-          cd ghostty
-          export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          zig build --fetch
-          zig build -Doptimize=ReleaseFast -Dcpu=baseline
-          mv zig-out ghostty
-          tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
+          ARCHIVE_NAME="ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2"
+          echo "Packaging into ${ARCHIVE_NAME}..."
+          tar -cvjf "${ARCHIVE_NAME}" -C ghostty/pkg .
 
-      - name: "List files"
-        run: ls -liFh
-
-      - name: "Create a release"
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ github.run.id }}
-          tag_name: ${{ github.ref_name }}
-          files: ghostty/ghostty-debian-13-amd64.tar.bz2
+          tag_name: ${{ env.RELEASE_TAG }}
+          files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
+
