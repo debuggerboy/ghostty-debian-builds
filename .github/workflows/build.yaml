@@ -6,21 +6,29 @@ on:
       - main
   workflow_dispatch:
 
-# Top-level environment variables parameterising all hard-coded build values
+# Top-level environment variables parameterising shared build properties.
+# Note: 'env' context is supported inside steps, but NOT inside 'container.image'.
+# Distribution images are parameterised via the matrix below.
 env:
   GHOSTTY_REPO: "ghostty-org/ghostty"
   GHOSTTY_VERSION: "v1.3.1"
-  UBUNTU_VERSION: "26.04"
-  DEBIAN_VERSION: "13"
   ARCH: "amd64"
   RELEASE_TAG: "main"
 
 jobs:
-  build-ubuntu:
-    name: Build Ubuntu Package
+  build:
+    name: Build ${{ matrix.distro }} Package
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: ubuntu
+            version: "26.04"
+          - distro: debian
+            version: "13"
     container:
-      image: ubuntu:${{ env.UBUNTU_VERSION }}
+      image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
       - name: Checkout Ghostty Repository
         uses: actions/checkout@v4
@@ -36,7 +44,7 @@ jobs:
 
       - name: Package Binary Artifacts
         run: |
-          ARCHIVE_NAME="ghostty-ubuntu-${{ env.UBUNTU_VERSION }}-${{ env.ARCH }}.tar.bz2"
+          ARCHIVE_NAME="ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2"
           echo "Packaging into ${ARCHIVE_NAME}..."
           tar -cvjf "${ARCHIVE_NAME}" -C ghostty/pkg .
 
@@ -44,35 +52,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          files: ghostty-ubuntu-${{ env.UBUNTU_VERSION }}-${{ env.ARCH }}.tar.bz2
-
-  build-debian:
-    name: Build Debian Package
-    runs-on: ubuntu-latest
-    container:
-      image: debian:${{ env.DEBIAN_VERSION }}
-    steps:
-      - name: Checkout Ghostty Repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.GHOSTTY_REPO }}
-          ref: ${{ env.GHOSTTY_VERSION }}
-          path: ghostty
-
-      - name: Install Dependencies
-        run: |
-          apt-get update
-          apt-get install -y build-essential xz-utils gettext libgtk-4-dev libgtk4-layer-shell-dev libadwaita-1-dev libxml2-utils blueprint-compiler libx11-dev git bzip2
-
-      - name: Package Binary Artifacts
-        run: |
-          ARCHIVE_NAME="ghostty-debian-${{ env.DEBIAN_VERSION }}-${{ env.ARCH }}.tar.bz2"
-          echo "Packaging into ${ARCHIVE_NAME}..."
-          tar -cvjf "${ARCHIVE_NAME}" -C ghostty/pkg .
-
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          files: ghostty-debian-${{ env.DEBIAN_VERSION }}-${{ env.ARCH }}.tar.bz2
+          files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
 
