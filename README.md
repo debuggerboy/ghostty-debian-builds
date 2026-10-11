@@ -14,11 +14,11 @@ We are currently building against the tag `v1.3.1`
 
 #### Ubuntu
 
-https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-ubuntu-26.04-amd64.tar.bz2
+https://github.com/debuggerboy/ghostty-debian-builds/releases/download/main/ghostty-ubuntu-26.04-amd64.tar.bz2
 
 #### Debian
 
-https://github.com/corradevops/ghostty-debian-builds/releases/download/main/ghostty-debian-13-amd64.tar.bz2
+https://github.com/debuggerboy/ghostty-debian-builds/releases/download/main/ghostty-debian-13-amd64.tar.bz2
 
 ## Warning
 
