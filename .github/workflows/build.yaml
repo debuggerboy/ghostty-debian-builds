@@ -37,7 +37,7 @@ jobs:
           echo "TAG_NAME=${{ env.GHOSTTY_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}-${TODAY}" >> $GITHUB_OUTPUT
 
       - name: Checkout Ghostty Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.GHOSTTY_REPO }}
           ref: ${{ env.GHOSTTY_VERSION }}
@@ -61,7 +61,7 @@ jobs:
           blueprint-compiler --version
 
       - name: Setup Zig
-        uses: debuggerboy/setup-zig@v1
+        uses: debuggerboy/setup-zig@v2
         with:
           version: 0.17.0
 
@@ -78,15 +78,15 @@ jobs:
         run: ls -liFh ghostty
 
       - name: Upload to Versioned Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v6
         with:
           tag_name: ${{ steps.dyn_tag.outputs.TAG_NAME }}
           working_directory: ghostty
           files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v6
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           working_directory: ghostty
-          files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
+          files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bzip2
