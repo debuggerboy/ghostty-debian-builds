@@ -45,8 +45,9 @@ jobs:
       - name: Build and Install blueprint-compiler 0.20.4
         run: |
           cd /tmp
-          wget http://deb.debian.org/debian/pool/main/b/blueprint-compiler/blueprint-compiler_0.20.4.orig.tar.xz
-          tar -xf blueprint-compiler_0.20.4.orig.tar.xz
+          # Download from GNOME official source, filename uses underscore
+          wget https://download.gnome.org/sources/blueprint-compiler/0.20/blueprint-compiler-0.20.4.tar.xz
+          tar -xf blueprint-compiler-0.20.4.tar.xz
           cd blueprint-compiler-0.20.4
           meson setup _build
           ninja -C _build
