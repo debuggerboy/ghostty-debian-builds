@@ -78,14 +78,14 @@ jobs:
         run: ls -liFh ghostty
 
       - name: Upload to Versioned Release
-        uses: softprops/action-gh-release@v6
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.dyn_tag.outputs.TAG_NAME }}
           working_directory: ghostty
           files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v6
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           working_directory: ghostty
