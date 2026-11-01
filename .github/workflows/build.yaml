@@ -34,7 +34,7 @@ jobs:
         id: dyn_tag
         run: |
           TODAY=$(date +'%Y%m%d-%H%M%S')
-          echo "TAG_NAME=${{ env.GHOSTTY_VERSION }}-${TODAY}" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=${{ env.GHOSTTY_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}-${TODAY}" >> $GITHUB_OUTPUT
 
       - name: Checkout Ghostty Repository
         uses: actions/checkout@v4
