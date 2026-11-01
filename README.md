@@ -6,7 +6,7 @@ Ghostty Terminal for Ubuntu and Debian
 
 The source : `https://github.com/ghostty-org/ghostty` 
 
-We are currently building against the tag `v1.3.1` 
+We are currently building against the tag `v1.4.0` 
 
 ## Download
 
