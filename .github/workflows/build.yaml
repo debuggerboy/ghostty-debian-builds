@@ -77,3 +77,15 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
           working_directory: ghostty
           files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
+
+      - name: Generate Dynamic Tag
+        id: dyn_tag
+        run: |
+          TODAY=$(date +'%Y%m%d-%H%M%S')
+          echo "TAG_NAME=${{ env.GHOSTTY_VERSION }}-${TODAY}" >> $GITHUB_OUTPUT
+
+      - name: Upload to Versioned Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.dyn_tag.outputs.TAG_NAME }}
+          files: ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2
