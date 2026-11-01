@@ -46,7 +46,7 @@ jobs:
       - name: "Setup Zip"
         uses: debuggerboy/setup-zig@v1
         with:
-          version: 0.15.2
+          version: 0.17.0
 
       - name: "Build Ghostty binary"
         # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
