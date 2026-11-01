@@ -42,11 +42,25 @@ jobs:
           apt-get update
           apt-get install -y build-essential xz-utils gettext libgtk-4-dev libgtk4-layer-shell-dev libadwaita-1-dev libxml2-utils blueprint-compiler libx11-dev git bzip2
 
-      - name: Package Binary Artifacts
+      # Refer : https://github.com/marketplace/actions/setup-zig-compiler
+      - name: "Setup Zip"
+        uses: debuggerboy/setup-zig@v1
+        with:
+          version: 0.15.2
+
+      - name: "Build Ghostty binary"
+        # Updated: Added generic -Dtarget flag to prevent "Illegal instruction" errors on older local CPUs
+        #run: cd ghostty && zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu && mv zig-out ghostty && tar -jcf ghostty-debian-13-amd64.tar.bz2 ghostty
         run: |
-          ARCHIVE_NAME="ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2"
-          echo "Packaging into ${ARCHIVE_NAME}..."
-          tar -cvjf "${ARCHIVE_NAME}" -C ghostty/pkg .
+          cd ghostty
+          export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          zig build --fetch
+          zig build -Doptimize=ReleaseFast -Dcpu=baseline
+          mv zig-out ghostty
+          tar -jcf ghostty-${{ matrix.distro }}-${{ matrix.version }}-${{ env.ARCH }}.tar.bz2 ghostty
+
+      - name: "List files"
+        run: ls -liFh
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v3
